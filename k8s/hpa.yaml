@@ -11,10 +11,10 @@ spec:
     kind: Deployment
     name: mi-lab
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   metrics:
-    # Utilization is measured against the container's CPU request (50m in
-    # deployment.yaml), so a new pod is added at about 35m average per pod.
+    # Utilization is measured against the container's CPU request (150m in
+    # deployment.yaml), so a new pod is added at about 105m average per pod.
     # Memory is not used: a Node process rarely gives it back, so it would
     # never scale down.
     - type: Resource

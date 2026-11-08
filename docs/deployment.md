@@ -140,7 +140,7 @@ fix DNS and re-run the workflow.
 `k8s/` is a plain Kustomize base: `deployment.yaml`, `service.yaml`,
 `hpa.yaml`, `ingress.yaml`. The namespace is not in it: the deploy token cannot
 manage namespaces, so the devops repository creates it. The HorizontalPodAutoscaler runs
-between 1 and 5 pods and adds one when average CPU passes 70% of the pod's
+between 1 and 3 pods and adds one when average CPU passes 70% of the pod's
 request. It needs metrics-server, which the cluster has. The Deployment leaves
 `replicas` unset on purpose: setting it would reset the count on every deploy.
 On a single node, extra pods cover load, a pod crash and a rollout, not losing
