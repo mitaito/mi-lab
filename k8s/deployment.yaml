@@ -6,8 +6,9 @@ metadata:
     app.kubernetes.io/name: mi-lab
     app.kubernetes.io/part-of: mi-lab
 spec:
-  # No replicas here: the HorizontalPodAutoscaler (hpa.yaml) owns the count,
-  # from 1 to 3. Setting it would reset the count on every kubectl apply.
+  # One pod: the site is prerendered, so it serves ~50 concurrent users without
+  # autoscaling.
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: mi-lab
@@ -53,8 +54,9 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
-          # Sized for ~50 concurrent users: a page view (prerendered HTML plus its
-          # static chunks, gzipped) costs ~15ms of VPS CPU, so ~110m with prefetches.
+          # Sized for ~50 concurrent users on this one pod: a page view (prerendered
+          # HTML plus its static chunks, gzipped) costs ~15ms of VPS CPU, so ~110m
+          # with prefetches.
           # The 1-core limit (Node uses one) lets a burst finish instead of being
           # throttled.
           resources:
