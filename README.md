@@ -15,14 +15,14 @@ it.
 
 ## Products
 
-| Product                                                    | Status     | What it is                                                                                                                  |
-| ---------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [Mi caro (Gomoku)](content/products/mi-caro.md)            | Production | A fast, minimalist web Gomoku engine built on bitboards and alpha-beta pruning, with zero server roundtrips.                |
-| [Resonance Canvas](content/products/resonance-canvas.md)   | Production | A tactile granular audio synthesizer and spectral visualizer built on WebAudio AudioWorklet and microtonal scale modulators. |
-| [Axiom Force Topology](content/products/axiom-force-topology.md) | Production | A Barnes-Hut force-directed graph renderer handling 50k nodes with spatial octrees and real-time kinetic perturbation.      |
-| [Lenia Continuous Substrates](content/products/lenia-continuous-substrates.md) | Production | Smooth mathematical life forms emerging from continuous kernel convolutions, computed in parallel on WebGPU.                |
-| [Nexus Agentic Sandbox](content/products/nexus-agentic-sandbox.md) | Beta       | A multi-agent consensus playground exploring adversarial deliberation protocols, context degradation and synthetic debate.  |
-| [Mnemonic CRDT Matrix](content/products/mnemonic-crdt-matrix.md) | Alpha      | A peer-to-peer, local-first collaborative semantic notebook over WebRTC data channels, with no central persistence.        |
+| Product                                                                        | Status     | What it is                                                                                                                   |
+| ------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [Mi caro (Gomoku)](content/products/mi-caro.md)                                | Production | A fast, minimalist web Gomoku engine built on bitboards and alpha-beta pruning, with zero server roundtrips.                 |
+| [Resonance Canvas](content/products/resonance-canvas.md)                       | Production | A tactile granular audio synthesizer and spectral visualizer built on WebAudio AudioWorklet and microtonal scale modulators. |
+| [Nexus Agentic Sandbox](content/products/nexus-agentic-sandbox.md)             | Beta       | A multi-agent consensus playground exploring adversarial deliberation protocols, context degradation and synthetic debate.   |
+| [Axiom Force Topology](content/products/axiom-force-topology.md)               | Production | A Barnes-Hut force-directed graph renderer handling 50k nodes with spatial octrees and real-time kinetic perturbation.       |
+| [Lenia Continuous Substrates](content/products/lenia-continuous-substrates.md) | Production | Smooth mathematical life forms emerging from continuous kernel convolutions, computed in parallel on WebGPU.                 |
+| [Mnemonic CRDT Matrix](content/products/mnemonic-crdt-matrix.md)               | Alpha      | A peer-to-peer, local-first collaborative semantic notebook over WebRTC data channels, with no central persistence.          |
 
 Release history for each product is in [`content/changelog/`](content/changelog).
 
@@ -43,7 +43,7 @@ Release history for each product is in [`content/changelog/`](content/changelog)
 We welcome partners, bug reports and ideas, all through GitHub issues:
 
 - [Report a bug](https://github.com/mitaito/mi-lab/issues/new?template=bug_report.yml):
-  something broken or confusing.
+  something broken, wrong or confusing.
 - [Suggest a feature](https://github.com/mitaito/mi-lab/issues/new?template=feature_request.yml):
   an idea, and the problem it would solve.
 - [Partner with us](https://github.com/mitaito/mi-lab/issues/new?template=partnership.yml):
@@ -54,9 +54,10 @@ we will reply in the issue to agree a private way to continue.
 
 ## About this repository
 
-This repository is the lab's website: a landing page, product directory and
-changelog, written as Markdown under [`content/`](content) and prerendered into
-a fast static site.
+This repository is the lab's website: a landing page, product directory,
+changelog and a full-window 3D view of the products (`/3d`). It is a Next.js
+app whose content is Markdown under [`content/`](content), with every page
+prerendered at build time. There is no backend and no database.
 
 - To run, change or build it, see the [development guide](docs/development.md).
 - To deploy it to Kubernetes, see the [deployment guide](docs/deployment.md).
