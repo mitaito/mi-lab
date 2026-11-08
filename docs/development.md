@@ -288,7 +288,9 @@ from costing the rest of the site anything, and are enforced by
   copy of its own, and the same products are indexed on `/`. Keep it allowed in
   `robots.txt`, because a crawler has to fetch the page to see the `noindex`.
 - **Desktop windows only.** The switch is `hidden lg:inline-flex`; below 1024px
-  `/3d` shows a notice and loads no 3D code.
+  the hero shows `constellation-switch-unavailable.tsx` instead, a look-alike
+  button (not a link) whose tooltip, on hover, click or tap, says 3D mode is
+  desktop only. Opened directly, `/3d` shows a notice and loads no 3D code.
 - **Motion and failure.** With `prefers-reduced-motion` it draws one still
   frame (no spin, parallax or hover motion; dragging still rotates it, because
   that is direct manipulation); without WebGL 2 it shows text and a link back. Leaving the page
