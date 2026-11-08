@@ -6,8 +6,9 @@ metadata:
     app.kubernetes.io/name: mi-lab
     app.kubernetes.io/part-of: mi-lab
 spec:
-  # No replicas here: the HorizontalPodAutoscaler (hpa.yaml) owns the count,
-  # from 1 to 5. Setting it would reset the count on every kubectl apply.
+  # One pod: the site is prerendered, so it serves ~50 concurrent users without
+  # autoscaling.
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: mi-lab
