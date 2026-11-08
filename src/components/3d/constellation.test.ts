@@ -68,6 +68,16 @@ describe("3D mode: cost to the rest of the site", () => {
     expect(read("lib/constellation.ts")).toContain('"(min-width: 64rem)"');
   });
 
+  it("shows smaller windows a look-alike that explains instead of linking to /3d", () => {
+    const unavailable = read("components/3d/constellation-switch-unavailable.tsx");
+
+    expect(read("components/home/hero.tsx")).toContain(
+      '<ConstellationSwitchUnavailable className="inline-flex lg:hidden" />',
+    );
+    expect(unavailable).toContain('role="tooltip"');
+    expect(unavailable).not.toMatch(/next\/link|href=|CONSTELLATION_PATH/);
+  });
+
   it("keeps the product cards on the home page", () => {
     expect(read("app/(site)/page.tsx")).toContain("<Products />");
   });

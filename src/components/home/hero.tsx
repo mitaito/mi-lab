@@ -1,5 +1,6 @@
 import { getProducts } from "@/lib/content";
 import { ConstellationSwitch } from "@/components/3d/constellation-switch";
+import { ConstellationSwitchUnavailable } from "@/components/3d/constellation-switch-unavailable";
 import { Icon } from "@/components/ui/icon";
 
 export function Hero() {
@@ -20,8 +21,10 @@ export function Hero() {
             <Icon name="deployed_code" className="text-xs" />
             KERNEL: V0.94-RELEASE
           </div>
-          {/* Desktop windows only; opens the full-window 3D view at /3d. */}
+          {/* Desktop windows open the full-window 3D view at /3d; smaller
+              ones get a look-alike that only says it is desktop only. */}
           <ConstellationSwitch className="hidden lg:inline-flex" />
+          <ConstellationSwitchUnavailable className="inline-flex lg:hidden" />
         </div>
 
         <div className="enter relative z-10 flex max-w-4xl flex-col gap-space-sm [--d:70ms]">
