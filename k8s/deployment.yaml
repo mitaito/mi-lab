@@ -54,17 +54,12 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
-          # Sized for ~50 concurrent users on this one pod: a page view (prerendered
-          # HTML plus its static chunks, gzipped) costs ~15ms of VPS CPU, so ~110m
-          # with prefetches.
-          # The 1-core limit (Node uses one) lets a burst finish instead of being
-          # throttled.
           resources:
             requests:
-              cpu: 150m
-              memory: 192Mi
+              cpu: 50m
+              memory: 128Mi
             limits:
-              cpu: "1"
+              cpu: 200m
               memory: 512Mi
           # Every page is prerendered, so "/" is cheap and exercises the server.
           startupProbe:
