@@ -47,3 +47,6 @@ next-env.d.ts
 # kubernetes
 .kube
 admin.conf
+
+# playwright
+.playwright-mcp
