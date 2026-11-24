@@ -6,6 +6,10 @@ metadata:
     app.kubernetes.io/name: mi-lab
     app.kubernetes.io/part-of: mi-lab
 spec:
+  # The image is always :latest, so an old ReplicaSet cannot roll back to older
+  # code. Keep only the previous one (for undoing a manifest change) instead of
+  # the default 10.
+  revisionHistoryLimit: 1
   # One pod: the site is prerendered, so it serves ~50 concurrent users without
   # autoscaling.
   replicas: 1
