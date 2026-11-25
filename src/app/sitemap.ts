@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { changelogStaticPaths, getContent } from "@/lib/content";
+import { getCurrentLegal, legalPath } from "@/lib/legal";
 import { absoluteUrl } from "@/lib/site";
 
 /**
@@ -13,6 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [
     { url: absoluteUrl("/"), lastModified: newest },
+    {
+      url: absoluteUrl(legalPath("terms")),
+      lastModified: getCurrentLegal("terms").effectiveDate,
+    },
+    {
+      url: absoluteUrl(legalPath("privacy")),
+      lastModified: getCurrentLegal("privacy").effectiveDate,
+    },
   ];
 
   for (const segments of changelogStaticPaths(content)) {

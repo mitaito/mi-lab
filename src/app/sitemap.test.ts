@@ -7,10 +7,12 @@ describe("sitemap", () => {
   const entries = sitemap();
   const urls = entries.map((entry) => entry.url);
 
-  it("lists the home page and every prerendered changelog URL", () => {
+  it("lists the home page, legal pages, and every prerendered changelog URL", () => {
     expect(urls).toContain(`${SITE_URL}/`);
+    expect(urls).toContain(`${SITE_URL}/terms`);
+    expect(urls).toContain(`${SITE_URL}/privacy`);
     expect(urls).toContain(`${SITE_URL}/changelog`);
-    expect(entries).toHaveLength(1 + changelogStaticPaths(getContent()).length);
+    expect(entries).toHaveLength(3 + changelogStaticPaths(getContent()).length);
   });
 
   it("uses absolute, unique URLs", () => {
