@@ -50,9 +50,10 @@ Use the shared Clerk instance for all Mitaito products.
    - **Privacy Policy URL:** `https://mitaito.com/privacy`
    - Enable **Require express consent to legal documents**.
    - If using Clerk prebuilt components, also set their appearance options `termsPageUrl` and `privacyPageUrl` to the same two URLs if the Dashboard configuration does not populate them automatically.
-4. Confirm the sign-up experience shows links to both pages and a required consent checkbox.
-5. Test in a development instance first, including password, OAuth, and SSO sign-up paths that Mitaito enables.
-6. After deployment, verify that the URLs resolve to the intended current version and that the sign-up result has a Clerk `legalAcceptedAt` timestamp.
+4. Allow users to delete their own account, so the **Delete account** section appears in the Clerk user profile (`<UserProfile />` and the Account Portal). This is the `delete_self_enabled` user setting; the Privacy Policy tells users they can delete their account there. Deleting in Clerk removes only the Clerk user: each app must also delete its own data, see [Account deletion across apps](#account-deletion-across-apps).
+5. Confirm the sign-up experience shows links to both pages and a required consent checkbox.
+6. Test in a development instance first, including password, OAuth, and SSO sign-up paths that Mitaito enables.
+7. After deployment, verify that the URLs resolve to the intended current version and that the sign-up result has a Clerk `legalAcceptedAt` timestamp.
 
 Do not point Clerk at a dated URL for normal sign-up. The stable URL is the right integration point; dated URLs are for historical evidence and review.
 
@@ -63,6 +64,51 @@ Clerk records `legalAcceptedAt`, not a Terms version or Privacy version. Since b
 The check should be based on the current legal release policy. If both documents always share one effective date, mi-caro can compare `legalAcceptedAt` with that date; otherwise, the comparison must be performed independently for Terms and Privacy, which a single Clerk timestamp cannot prove. The application should require re-consent when the accepted timestamp predates the relevant required date. When the user accepts again, update Clerk's `legalAcceptedAt` through the Clerk Backend API. Do not put this audit value in `unsafeMetadata`.
 
 This is an inference from two records, not a complete consent ledger. Preserve the dated documents, PR reviews, merge commits, and deployment records. If a regulator or counsel requires a stronger audit trail, add a dedicated consent-event store later rather than silently treating a timestamp as proof of every detail of the interaction.
+
+## Account deletion across apps
+
+The Privacy Policy promises that deleting an account deletes the account **and all product data linked to it**, with backups expiring within 7 days. Clerk only deletes its own user record, so every Mitaito app that stores user data must delete that data itself when the user is deleted. This applies whether the user deletes the account from their profile or an admin deletes it in the Clerk Dashboard.
+
+### One webhook endpoint per app
+
+Each app registers its own endpoint in the Clerk Dashboard, under **Webhooks**, subscribed to `user.deleted`. Clerk delivers webhooks through Svix, which sends the same event to every subscribed endpoint:
+
+```text
+Clerk -- user.deleted --+--> https://caro.mitaito.com/api/webhooks/clerk -> deletes mi-caro data
+       (Svix fan-out)   +--> https://<app>.mitaito.com/api/webhooks/clerk -> deletes that app's data
+                        +--> ...
+```
+
+Why one endpoint per app, rather than a central receiver that forwards events:
+
+- Apps fail independently. Svix retries each endpoint on its own schedule, so one app being down only delays that app's deletion.
+- Each app knows its own schema and deletes its own data. Nothing central has to know every app's tables.
+- Adding an app is adding one endpoint in the Dashboard. No other code changes.
+
+A central receiver with a queue or event bus is worth it only with many apps or more complex event processing; at the current scale it adds a service to run and a shared point of failure.
+
+### Requirements for every app's handler
+
+1. **Verify the signature** with Clerk's `verifyWebhook()`. Each endpoint has its own signing secret; store it as that app's secret, never in this public repository.
+2. **Be idempotent.** Clerk delivers at least once, so the same event can arrive more than once. A delete keyed by the Clerk user ID (`DELETE ... WHERE user_id = ?`) already is.
+3. **Return `2xx` only after the data is deleted.** A `4xx` or `5xx` response, or none, makes Svix retry the event.
+4. **Never recreate a deleted user.** If a `user.created` or `user.updated` event arrives after `user.deleted` (events can arrive out of order), ignore it. `user.deleted` has no `updated_at`; compare the event's top-level `timestamp` instead.
+
+The endpoint must be reachable from the internet. Optionally, accept requests only from [Svix's webhook IPs](https://docs.svix.com/webhook-ips.json).
+
+### Reconciliation job
+
+Webhooks can still be missed: an app down longer than the Svix retry window, or an app added after a user was deleted. Each app should also run a scheduled job (for example daily) that checks the Clerk user IDs in its database against Clerk and deletes the data of users that no longer exist. This keeps the Privacy Policy promise true even when a webhook is lost.
+
+### Checklist for a new app
+
+- [ ] Webhook endpoint in the Clerk Dashboard, subscribed to `user.deleted`
+- [ ] Signing secret stored as the app's secret
+- [ ] Handler verifies the signature, deletes all data for the user ID, and returns `2xx` when done
+- [ ] Repeated and out-of-order events are handled (requirements 2 and 4)
+- [ ] Reconciliation job scheduled
+- [ ] Backups of the app's data expire within 7 days, as the Privacy Policy states
+- [ ] Tested in the development instance: delete a test user, confirm its data is gone
 
 ## Required legal review before production
 
