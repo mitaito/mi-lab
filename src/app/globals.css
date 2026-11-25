@@ -391,6 +391,18 @@ a:focus-visible .logo-bubble {
     border-left: 2px solid var(--surface-container-highest);
     padding-left: 1rem;
   }
+  .legal-notes blockquote {
+    border-left-color: var(--tertiary);
+    color: var(--on-surface);
+    font-size: 0.875rem;
+  }
+  .legal-notes h2 {
+    margin-top: 2.5rem;
+    font-size: 1.25rem;
+  }
+  .legal-notes h3 {
+    margin-top: 2rem;
+  }
   .release-notes table {
     display: block;
     overflow-x: auto;

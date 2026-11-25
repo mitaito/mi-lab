@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { IssueLink } from "@/components/ui/issue-link";
 
 export function Footer() {
@@ -23,6 +24,12 @@ export function Footer() {
           className="flex flex-wrap items-center justify-center gap-x-space-md gap-y-space-xs"
         >
           <span className="text-outline">© Mitaito Lab</span>
+          <Link href="/terms" className={link}>
+            Terms
+          </Link>
+          <Link href="/privacy" className={link}>
+            Privacy
+          </Link>
           <IssueLink template="bug_report" className={link}>
             Report a bug
           </IssueLink>
